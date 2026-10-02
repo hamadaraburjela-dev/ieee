@@ -60,6 +60,28 @@
       article.append(icon(["code-2", "users", "sparkles"][index]), node("h3", null, item.title), node("p", null, item.body));
       return article;
     }));
+    const podium = document.getElementById("prizePodium");
+    if (podium) podium.replaceChildren(...current.prizes.global.slice(0, 3).map((item, index) => {
+      const card = node("article", "prize-card " + ["gold", "silver", "bronze"][index]);
+      const heading = node("div", "prize-card-heading");
+      heading.append(icon(index === 0 ? "trophy" : "medal"), node("span", "prize-rank", item.rank), node("span", "prize-position", String(index + 1).padStart(2, "0")));
+      card.append(heading, node("h3", null, item.title), node("strong", "prize-highlight", item.highlight), node("p", null, item.details));
+      return card;
+    }));
+    const ranges = document.getElementById("prizeRanges");
+    if (ranges) ranges.replaceChildren(...current.prizes.global.slice(3).map((item, index) => {
+      const article = node("article", "prize-range");
+      article.append(icon(index === 2 ? "globe" : "gift"), node("span", "prize-rank", item.rank), node("h3", null, item.title), node("strong", null, item.highlight), node("p", null, item.details));
+      return article;
+    }));
+    const local = document.getElementById("localPrizes");
+    if (local) local.replaceChildren(...current.prizes.local.map((item, index) => {
+      const article = node("article", "local-prize");
+      article.append(icon(index === 0 ? "banknote" : "graduation-cap"));
+      const body = node("div");
+      body.append(node("h3", null, item.title), node("strong", null, item.highlight), node("p", null, item.details));
+      article.append(body); return article;
+    }));
     const timeline = document.getElementById("timeline");
     const groups = new Map();
     current.timeline.forEach(item => {

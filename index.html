@@ -19,7 +19,7 @@
       <a class="brand" href="#home"><img src="lo.JPG" alt="IEEE IUG" class="brand-logo" width="48" height="48" decoding="async"><span><strong>IEEE IUG Student Branch</strong><small>الجامعة الإسلامية بغزة</small></span></a>
       <button class="menu icon-button" id="menuBtn" aria-label="القائمة" aria-expanded="false" aria-controls="navLinks" title="القائمة"><svg class="icon" aria-hidden="true"><use href="icons.svg#menu"></use></svg></button>
       <nav class="links" id="navLinks" aria-label="التنقل الرئيسي">
-        <a href="#xtreme">عن المسابقة</a><a href="#gaza">غزة والمشاركة</a><a href="#venue">المكان</a><a href="#schedule">الجدول الزمني</a>
+        <a href="#xtreme">عن المسابقة</a><a href="#prizes">الجوائز</a><a href="#gaza">غزة والمشاركة</a><a href="#venue">المكان</a><a href="#schedule">الجدول الزمني</a>
         <a href="#form" class="nav-register">سجّل الآن <svg class="icon" aria-hidden="true"><use href="icons.svg#arrow-up-left"></use></svg></a>
       </nav>
     </div>
@@ -60,14 +60,29 @@
         <figure class="poster-figure"><img src="assets/poster.webp" alt="تعريف IEEEXtreme: 24 ساعة من حل المسائل والتفكير الخوارزمي والعمل الجماعي" width="600" height="1478" loading="lazy" decoding="async"><figcaption>تحدٍّ واحد. أفكار لا تنتهي.</figcaption></figure>
       </div>
     </section>
+    <section class="section prizes-section" id="prizes" aria-labelledby="prizesTitle">
+      <div class="container">
+        <div class="section-head"><span class="kicker">02 / الجوائز والفرص</span><h2 id="prizesTitle" data-content="prizesTitle"></h2><p data-content="prizesIntro"></p></div>
+        <div class="prize-group-heading"><h3><svg class="icon" aria-hidden="true"><use href="icons.svg#globe"></use></svg>الجوائز العالمية</h3><a class="text-link" href="https://ieeextreme.org/" target="_blank" rel="noopener">إعلان IEEE <svg class="icon" aria-hidden="true"><use href="icons.svg#external-link"></use></svg></a></div>
+        <div class="prize-podium" id="prizePodium"></div>
+        <div class="prize-ranges" id="prizeRanges"></div>
+        <p class="prize-note" data-content="prizesNote"></p>
+      </div>
+      <div class="local-prizes-band"><div class="container">
+        <div class="prize-group-heading"><h3>من غزة، فرص تكمل الرحلة</h3><span>الجوائز المحلية والمنح</span></div>
+        <div class="local-prizes" id="localPrizes"></div>
+        <p class="prize-note" data-content="localPrizesNote"></p>
+        <a href="#form" class="text-link">كن جزءاً من التحدّي <svg class="icon" aria-hidden="true"><use href="icons.svg#arrow-up-left"></use></svg></a>
+      </div></div>
+    </section>
     <section class="section gaza" id="gaza">
-      <div class="container"><span class="kicker">02 / من أجل مجتمعنا</span>
+      <div class="container"><span class="kicker">03 / من أجل مجتمعنا</span>
         <div class="gaza-layout"><h2 data-content="gazaTitle"></h2><div><p data-content="gazaBody"></p><p data-content="gazaExtra"></p><a href="#form" class="text-link">ابدأ بخطوة، سجّل معنا <svg class="icon" aria-hidden="true"><use href="icons.svg#arrow-up-left"></use></svg></a></div></div>
         <div class="benefits" id="benefits"></div>
       </div>
     </section>
     <section class="section" id="venue">
-      <div class="container"><span class="kicker">03 / الاستضافة المحلية</span>
+      <div class="container"><span class="kicker">04 / الاستضافة المحلية</span>
         <div class="venue-layout"><div><h2 data-content="localTitle"></h2><p data-content="localBody"></p></div>
           <div class="venue-details"><div class="venue-line"><svg class="icon" aria-hidden="true"><use href="icons.svg#map-pin"></use></svg><div><span>المستضيف</span><h3 data-content="venueHost"></h3><p data-content="venueBuilding"></p></div></div>
             <dl class="room-list"><div><dt>قاعة المسابقة</dt><dd data-content="competitionRoom" dir="ltr">P101</dd></div><div><dt>راحة الطالبات</dt><dd data-content="femaleRestRoom" dir="ltr">P102</dd></div></dl><p data-content="venueNote"></p>
@@ -77,14 +92,14 @@
       </div>
     </section>
     <section class="section schedule-section" id="schedule">
-      <div class="container"><div class="section-head"><span class="kicker">04 / برنامج اللقاء</span><h2 data-content="scheduleTitle"></h2><p data-content="scheduleNote"></p></div><div id="timeline" class="timeline"></div></div>
+      <div class="container"><div class="section-head"><span class="kicker">05 / برنامج اللقاء</span><h2 data-content="scheduleTitle"></h2><p data-content="scheduleNote"></p></div><div id="timeline" class="timeline"></div></div>
     </section>
     <section class="section" id="faq">
-      <div class="container faq-layout"><div><span class="kicker">05 / قبل أن تسجّل</span><h2>كل سؤال يستحق إجابة.</h2><p>تعرّف على المشاركة، تكوين الفرق، والترتيبات المحلية.</p></div><div class="faq" id="faqList"></div></div>
+      <div class="container faq-layout"><div><span class="kicker">06 / قبل أن تسجّل</span><h2>كل سؤال يستحق إجابة.</h2><p>تعرّف على المشاركة، تكوين الفرق، والترتيبات المحلية.</p></div><div class="faq" id="faqList"></div></div>
     </section>
     <section class="section registration" id="form">
       <div class="container">
-        <div class="section-head"><span class="kicker">06 / انضمّ للتحدّي</span><h2 data-content="registrationTitle">مكانك بيننا يبدأ بطلب تسجيل.</h2><p data-content="registrationBody"></p><p class="registration-note" data-content="registrationNote"></p></div>
+        <div class="section-head"><span class="kicker">07 / انضمّ للتحدّي</span><h2 data-content="registrationTitle">مكانك بيننا يبدأ بطلب تسجيل.</h2><p data-content="registrationBody"></p><p class="registration-note" data-content="registrationNote"></p></div>
         <div class="form-layout reveal">
           <aside class="side-panel">
             <h3>تعليمات مهمة</h3>

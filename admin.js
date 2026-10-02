@@ -8,6 +8,7 @@
   let dirty = false;
   let busy = false;
   let previewOnly = false;
+  let contentSchema = 0;
   const groups = [
     ["واجهة الموقع", [["eventName", "اسم المسابقة"], ["heroTagline", "العبارة الرئيسية"], ["heroDescription", "مقدمة المشاركة", true], ["eventDateLabel", "نص تاريخ اللقاء"]]],
     ["التعريف العالمي", [["globalTitle", "العنوان"], ["globalBody", "التعريف بالمسابقة", true], ["globalExtra", "تفاصيل الفرق والتحدّي", true]]],
@@ -41,6 +42,7 @@
     control.dataset.path = path;
     control.value = value ?? "";
     if (["text", "textarea"].includes(multiline ? "textarea" : type)) control.maxLength = 3000;
+    if (path.startsWith("prizes.")) control.maxLength = multiline ? 1500 : 180;
     control.required = !path.endsWith("endTime");
     wrapper.append(control); return wrapper;
   }
@@ -67,6 +69,7 @@
   function setBusy(value) {
     busy = value; $("editorForm").inert = value;
     ["saveBtn", "refreshBtn", "logoutBtn"].forEach(id => $(id).disabled = value || (id !== "logoutBtn" && previewOnly));
+    if (contentSchema < 2) $("saveBtn").disabled = true;
     $("saveBtn").querySelector("span").textContent = value ? "جارٍ المعالجة..." : "نشر التعديلات";
   }
   function updateTotals() {
@@ -94,6 +97,15 @@
     header.append(controls); return header;
   }
   function renderArrays() {
+    ["global", "local"].forEach(key => {
+      $(key + "PrizeFields").replaceChildren(...config.prizes[key].map((item, index) => {
+        const section = element("div", "repeated-editor");
+        section.append(element("h3", null, key === "global" ? "الجائزة العالمية " + (index + 1) : index === 0 ? "الجوائز المالية المحلية" : "المنح الدراسية"));
+        if (key === "global") section.append(field("الترتيب", `prizes.${key}.${index}.rank`, item.rank));
+        section.append(field("عنوان الجائزة", `prizes.${key}.${index}.title`, item.title), field("القيمة أو العبارة البارزة", `prizes.${key}.${index}.highlight`, item.highlight), field("التفاصيل والشروط", `prizes.${key}.${index}.details`, item.details, true));
+        return section;
+      }));
+    });
     $("benefitFields").replaceChildren(...config.benefits.map((item, index) => {
       const section = element("div", "repeated-editor");
       section.append(element("h3", null, "الميزة " + (index + 1)), field("العنوان", `benefits.${index}.title`, item.title), field("الوصف", `benefits.${index}.body`, item.body, true));
@@ -126,6 +138,7 @@
     $("venueFields").replaceChildren(...venueLabels.map(([key, label, multiline]) => field(label, "text." + key, config.text[key], multiline)));
     $("scheduleFields").replaceChildren(field("عنوان البرنامج", "text.scheduleTitle", config.text.scheduleTitle), field("ملاحظة التوقيت", "text.scheduleNote", config.text.scheduleNote, true));
     $("statsNoteField").replaceChildren(field("الملاحظة أسفل الإحصائيات", "text.statsNote", config.text.statsNote, true));
+    $("prizeTextFields").replaceChildren(...[["prizesTitle", "عنوان قسم الجوائز"], ["prizesIntro", "مقدمة الجوائز"], ["prizesNote", "شروط الجوائز العالمية"], ["localPrizesNote", "شروط الجوائز المحلية والمنح"]].map(([key, label]) => field(label, "text." + key, config.text[key], key !== "prizesTitle")));
     Object.entries(config.stats).forEach(([key, value]) => {
       const input = $("editorForm").elements.namedItem(key); input.value = value ?? ""; input.dataset.path = "stats." + key;
     });
@@ -148,8 +161,8 @@
     button.addEventListener("keydown", event => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
-      const tabs = ["content", "program", "stats"]; const index = tabs.indexOf(button.dataset.tab);
-      activateTab(event.key === "Home" ? tabs[0] : event.key === "End" ? tabs[2] : tabs[(index + (event.key === "ArrowLeft" ? 1 : 2)) % 3], true);
+      const tabs = Array.from(document.querySelectorAll("[data-tab]"), tab => tab.dataset.tab); const index = tabs.indexOf(button.dataset.tab);
+      activateTab(event.key === "Home" ? tabs[0] : event.key === "End" ? tabs.at(-1) : tabs[(index + (event.key === "ArrowLeft" ? 1 : tabs.length - 1)) % tabs.length], true);
     });
   });
   $("editorForm").addEventListener("input", event => {
@@ -183,8 +196,10 @@
     try {
       const result = await SiteAPI.adminRequest("adminLogin", { password: $("adminPassword").value });
       token = result.token; storageSet(sessionKey, token); previewOnly = false;
+      contentSchema = Number(result.contentSchema) || 0;
       config = SiteData.merge(result.config); dirty = false; $("adminPassword").value = "";
       renderEditor(); message("editorMessage", "");
+      if (contentSchema < 2) message("editorMessage", "خدمة الشيت تحتاج نشر إصدار الجوائز الجديد. المعاينة متاحة، لكن النشر متوقف حتى تحديث الخدمة ثم تحميل النسخة المنشورة.", "error");
       const draft = storageGet(draftKey);
       if (draft && confirm("يوجد مسودة محفوظة في هذه الجلسة. هل تريد استعادتها؟")) { config = SiteData.merge(JSON.parse(draft)); renderEditor(); changed(); }
     } catch (error) { message("loginMessage", describeError(error), "error"); }
@@ -200,7 +215,7 @@
     }
   });
   $("editorForm").addEventListener("submit", async event => {
-    event.preventDefault(); if (busy || previewOnly || !token) return;
+    event.preventDefault(); if (busy || previewOnly || !token || contentSchema < 2) return;
     const errors = SiteData.validate(config);
     if (errors.length) { message("editorMessage", errors.join("\n"), "error"); if (Object.values(config.stats).some(value => value === null)) activateTab("stats"); window.scrollTo({ top: 0, behavior: "auto" }); return; }
     setBusy(true); message("editorMessage", "جارٍ نشر التعديلات والتحقق من حفظها...");
@@ -216,7 +231,7 @@
   $("refreshBtn").addEventListener("click", async () => {
     if (busy || previewOnly || (dirty && !confirm("تحميل النسخة المنشورة سيستبدل التعديلات الحالية. هل تريد المتابعة؟"))) return;
     setBusy(true); message("editorMessage", "جارٍ تحميل النسخة المنشورة...");
-    try { const result = await SiteAPI.adminRequest("adminGet", { token }); config = SiteData.merge(result.config); dirty = false; storageRemove(draftKey); renderEditor(); message("editorMessage", "تم تحميل النسخة المنشورة.", "success"); }
+    try { const result = await SiteAPI.adminRequest("adminGet", { token }); contentSchema = Number(result.contentSchema) || 0; config = SiteData.merge(result.config); dirty = false; storageRemove(draftKey); renderEditor(); message("editorMessage", contentSchema < 2 ? "خدمة الشيت تحتاج نشر إصدار الجوائز الجديد قبل النشر." : "تم تحميل النسخة المنشورة.", contentSchema < 2 ? "error" : "success"); }
     catch (error) { message("editorMessage", describeError(error), "error"); }
     finally { setBusy(false); }
   });
@@ -247,6 +262,6 @@
   token = storageGet(sessionKey) || "";
   if (token) {
     busy = true; $("loginBtn").disabled = true; message("loginMessage", "جارٍ استعادة جلسة الإدارة...");
-    SiteAPI.adminRequest("adminGet", { token }).then(result => { config = SiteData.merge(result.config); renderEditor(); }).catch(error => { token = ""; storageRemove(sessionKey); message("loginMessage", describeError(error), "error"); }).finally(() => { busy = false; $("loginBtn").disabled = false; });
+    SiteAPI.adminRequest("adminGet", { token }).then(result => { contentSchema = Number(result.contentSchema) || 0; config = SiteData.merge(result.config); renderEditor(); if (contentSchema < 2) message("editorMessage", "خدمة الشيت تحتاج نشر إصدار الجوائز الجديد قبل النشر.", "error"); }).catch(error => { token = ""; storageRemove(sessionKey); message("loginMessage", describeError(error), "error"); }).finally(() => { busy = false; $("loginBtn").disabled = false; });
   }
 })();

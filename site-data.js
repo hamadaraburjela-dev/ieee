@@ -29,7 +29,11 @@
       registrationTitle: "مكانك بيننا يبدأ بطلب تسجيل.",
       registrationBody: "سجّل بشكل فردي، سواء كان لديك فريق كامل أو تبحث عن زملاء. تراجع اللجنة الطلبات وتتواصل مع المقبولين لاستكمال التحضير والتسجيل الرسمي.",
       registrationNote: "التسجيل هنا طلب مشاركة محلي، وليس بديلاً عن التسجيل الرسمي في IEEEXtreme. يلزم استيفاء شروط المسابقة وعضوية IEEE للمشاركة الرسمية.",
-      statsNote: "أعداد التسجيل المنشورة من اللجنة المنظمة. التسجيل لا يعني القبول النهائي."
+      statsNote: "أعداد التسجيل المنشورة من اللجنة المنظمة. التسجيل لا يعني القبول النهائي.",
+      prizesTitle: "تحدٍّ يستحقّ الجهد. وجوائز تفتح آفاقاً.",
+      prizesIntro: "نافس على الجوائز العالمية، واكتشف فرص التكريم والدعم الدراسي في استضافة غزة.",
+      prizesNote: "الجوائز العالمية حسب إعلان IEEE وشروطها. الاستحقاق مرتبط بالترتيب الرسمي، وقد تؤثر قيود السفر والقوانين على إتاحتها.",
+      localPrizesNote: "تعلن اللجنة المنظمة قيم الجوائز المحلية، والجهات المانحة، وعدد المنح وشروط الاستحقاق. المشاركة لا تعني الحصول على جائزة أو منحة."
     },
     stats: { teamCapacity: 20, registeredTeams: null, femaleStudents: null, maleStudents: null },
     benefits: [
@@ -37,6 +41,20 @@
       { title: "فريق تتكامل معه", body: "قسّم الأدوار، ناقش الحلول، وجرّب معنى التعاون عندما يكون الوقت جزءاً من التحدّي." },
       { title: "تجربة تجمعنا", body: "لقاء مع مجتمع غزة التقني، وفعاليات قبل المسابقة، وذكريات نصنعها معاً." }
     ],
+    prizes: {
+      global: [
+        { rank: "الأول عالمياً", title: "رحلة إلى مؤتمر IEEE", highlight: "وجهتك إلى العالم", details: "لكل عضو في الفريق: تذاكر سفر ذهاباً وإياباً، تسجيل المؤتمر وإقامة 3 ليالٍ. يمكن تقديم بدائل عند تقييد السفر." },
+        { rank: "الثاني عالمياً", title: "جائزة مالية", highlight: "400 دولار / عضو", details: "1,200 دولار لفريق من 3 أعضاء، وفق شروط الجائزة العالمية." },
+        { rank: "الثالث عالمياً", title: "جائزة مالية", highlight: "300 دولار / عضو", details: "900 دولار لفريق من 3 أعضاء، وفق شروط الجائزة العالمية." },
+        { rank: "من الرابع إلى العاشر عالمياً", title: "حزمة هدايا خاصة", highlight: "لكل عضو", details: "منتجات وهدايا IEEEXtreme خاصة لأعضاء الفرق الفائزة." },
+        { rank: "من الحادي عشر إلى العشرين عالمياً", title: "هدايا IEEEXtreme", highlight: "لكل عضو", details: "حزمة منتجات وهدايا لأعضاء الفرق ضمن هذه المراكز." },
+        { rank: "أول 3 فرق في كل IEEE Region", title: "تكريم على مستوى المنطقة", highlight: "لجميع أعضاء الفرق", details: "حزمة منتجات وهدايا IEEEXtreme لأفضل ثلاثة فرق في كل منطقة IEEE." }
+      ],
+      local: [
+        { title: "جوائز مالية محلية", highlight: "تميّز يُكافأ", details: "جوائز مالية ضمن الاستضافة المحلية في غزة. تُعلن القيم وآلية التوزيع من اللجنة المنظمة." },
+        { title: "منح دراسية", highlight: "فرصة لما بعد المسابقة", details: "منح دراسية ضمن فرص الدعم المحلية، وفق شروط الاستحقاق التي تعلنها اللجنة والجهات المانحة." }
+      ]
+    },
     timeline: [
       { date: "2026-10-30", time: "17:00", endTime: "19:00", kind: "event", title: "الاستقبال والتعارف", description: "استقبال المشاركين، تنظيم الفرق، والتعرّف على المكان والزملاء." },
       { date: "2026-10-30", time: "19:30", endTime: "", kind: "event", title: "مؤتمر انطلاق المسابقة", description: "لقاء الانطلاق والأجواء المحلية، والتعرّف على التحدّي والتعليمات التنظيمية." },
@@ -68,6 +86,12 @@
     });
     ["timeline", "benefits", "faqs"].forEach(key => {
       if (Array.isArray(input[key]) && input[key].length) data[key] = input[key];
+    });
+    ["global", "local"].forEach(key => {
+      const incoming = input.prizes?.[key];
+      if (Array.isArray(incoming) && incoming.length === defaults.prizes[key].length) {
+        data.prizes[key] = data.prizes[key].map((item, index) => Object.fromEntries(Object.entries(item).map(([field, value]) => [field, typeof incoming[index]?.[field] === "string" ? incoming[index][field] : value])));
+      }
     });
     data.registrationOpen = input.registrationOpen !== false;
     data.revision = Number(input.revision) || 0;
@@ -104,6 +128,10 @@
     else if (Date.parse(`${ends[0].date}T${ends[0].time}:00Z`) - Date.parse(`${starts[0].date}T${starts[0].time}:00Z`) !== 86400000) errors.push("مدة المسابقة بين الانطلاق والانتهاء يجب أن تكون 24 ساعة.");
     if (!Array.isArray(data.benefits) || data.benefits.length !== 3 || data.benefits.some(item => !item.title?.trim() || !item.body?.trim() || item.title.length > 180 || item.body.length > 1500)) errors.push("أكمل مزايا المشاركة الثلاث.");
     if (!Array.isArray(data.faqs) || !data.faqs.length || data.faqs.length > 20 || data.faqs.some(item => !item.question?.trim() || !item.answer?.trim() || item.question.length > 300 || item.answer.length > 2000)) errors.push("أكمل الأسئلة والأجوبة؛ الحد الأقصى 20 سؤالاً.");
+    ["global", "local"].forEach(key => {
+      const items = data.prizes?.[key];
+      if (!Array.isArray(items) || items.length !== defaults.prizes[key].length || items.some(item => Object.keys(defaults.prizes[key][0]).some(field => typeof item?.[field] !== "string" || !item[field].trim() || item[field].length > (field === "details" ? 1500 : 180)))) errors.push("أكمل تفاصيل الجوائز العالمية والمحلية ضمن الطول المسموح.");
+    });
     return [...new Set(errors)];
   }
   root.SiteData = { defaults, fresh, merge, validate };
