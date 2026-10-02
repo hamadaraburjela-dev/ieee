@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>إدارة الموقع | IEEEXtreme غزة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="event.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+  <header class="admin-header"><div class="admin-container admin-nav"><a class="brand" href="index.html"><img src="lo.JPG" class="brand-logo" width="40" height="40" alt="IEEE IUG"><span><strong>IEEEXtreme Gaza</strong><small>إدارة الموقع</small></span></a><div class="admin-header-actions"><a class="text-link" href="index.html" target="_blank" rel="noopener">الموقع <svg class="icon" aria-hidden="true"><use href="icons.svg#external-link"></use></svg></a><button class="icon-button" id="logoutBtn" title="تسجيل الخروج" aria-label="تسجيل الخروج" hidden><svg class="icon" aria-hidden="true"><use href="icons.svg#log-out"></use></svg></button></div></div></header>
+  <main class="admin-container">
+    <section class="login-panel" id="loginPanel" aria-labelledby="loginTitle">
+      <svg class="icon login-icon" aria-hidden="true"><use href="icons.svg#lock-keyhole"></use></svg><h1 id="loginTitle">إدارة تجربة غزة</h1><p>سجّل الدخول لتحديث المحتوى والبرنامج والأعداد المنشورة.</p>
+      <form id="loginForm"><label for="adminPassword">كلمة مرور الإدارة</label><div class="password-field"><input id="adminPassword" type="password" autocomplete="current-password" required maxlength="512"><button class="icon-button" id="passwordToggle" type="button" title="إظهار كلمة المرور" aria-label="إظهار كلمة المرور"><svg class="icon" aria-hidden="true"><use href="icons.svg#eye"></use></svg></button></div><button class="btn primary" id="loginBtn" type="submit">دخول <svg class="icon" aria-hidden="true"><use href="icons.svg#log-in"></use></svg></button></form>
+      <p class="admin-message" id="loginMessage" role="status" aria-live="polite"></p><button class="preview-entry text-link" id="draftBtn" type="button">فتح مسودة للمعاينة <svg class="icon" aria-hidden="true"><use href="icons.svg#eye"></use></svg></button>
+    </section>
+    <section id="editor" hidden aria-labelledby="editorTitle">
+      <div class="editor-heading"><div><h1 id="editorTitle">محتوى الموقع</h1><p id="editorState">نسخة منشورة</p></div><div class="editor-actions"><button class="btn secondary" id="refreshBtn" type="button" title="تحميل النسخة المنشورة"><svg class="icon" aria-hidden="true"><use href="icons.svg#refresh-cw"></use></svg><span>تحديث</span></button><button class="btn secondary" id="previewBtn" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#eye"></use></svg><span>معاينة</span></button><button class="btn primary" id="saveBtn" type="submit" form="editorForm"><svg class="icon" aria-hidden="true"><use href="icons.svg#save"></use></svg><span>نشر التعديلات</span></button></div></div>
+      <p class="admin-message editor-message" id="editorMessage" role="status" aria-live="polite"></p>
+      <div class="admin-tabs" role="tablist" aria-label="أقسام الإدارة"><button id="tab-content" class="active" type="button" role="tab" aria-selected="true" aria-controls="panel-content" data-tab="content"><svg class="icon" aria-hidden="true"><use href="icons.svg#file-pen-line"></use></svg>المحتوى</button><button id="tab-program" type="button" role="tab" aria-selected="false" aria-controls="panel-program" tabindex="-1" data-tab="program"><svg class="icon" aria-hidden="true"><use href="icons.svg#calendar-days"></use></svg>المكان والبرنامج</button><button id="tab-stats" type="button" role="tab" aria-selected="false" aria-controls="panel-stats" tabindex="-1" data-tab="stats"><svg class="icon" aria-hidden="true"><use href="icons.svg#chart-no-axes-column"></use></svg>الإحصائيات</button></div>
+      <form id="editorForm" novalidate>
+        <section id="panel-content" role="tabpanel" aria-labelledby="tab-content"><div id="textFields"></div><div class="edit-section"><h2>مزايا المشاركة</h2><div id="benefitFields"></div></div><div class="edit-section"><div class="edit-section-heading"><h2>الأسئلة الشائعة</h2><button class="btn secondary compact" id="addFaq" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#plus"></use></svg>إضافة سؤال</button></div><div id="faqFields"></div></div></section>
+        <section id="panel-program" role="tabpanel" aria-labelledby="tab-program" hidden><div class="edit-section"><h2>الاستضافة والمكان</h2><div id="venueFields" class="admin-grid"></div></div><div class="edit-section"><h2>عنوان البرنامج</h2><div id="scheduleFields"></div></div><div class="edit-section"><div class="edit-section-heading"><h2>الجدول الزمني · توقيت غزة</h2><button class="btn secondary compact" id="addEvent" type="button"><svg class="icon" aria-hidden="true"><use href="icons.svg#plus"></use></svg>إضافة فعالية</button></div><div id="timelineFields"></div></div></section>
+        <section id="panel-stats" role="tabpanel" aria-labelledby="tab-stats" hidden><div class="edit-section"><h2>أعداد التسجيل المنشورة</h2><p>حدّث الأعداد التي اعتمدتها اللجنة. الفرق المتبقية تُحسب من السعة وعدد الفرق المسجلة.</p><div class="admin-grid stats-inputs"><label>سعة الفرق<input type="number" name="teamCapacity" min="1" max="10000" required></label><label>عدد الفرق المسجلة<input type="number" name="registeredTeams" min="0" max="10000" required></label><label>عدد الطالبات المسجلات<input type="number" name="femaleStudents" min="0" max="10000" required></label><label>عدد الطلاب المسجلين<input type="number" name="maleStudents" min="0" max="10000" required></label></div><dl class="admin-totals"><div><dt>الفرق المتبقية</dt><dd id="adminRemaining">—</dd></div><div><dt>إجمالي المشاركين</dt><dd id="adminStudents">—</dd></div></dl><div id="statsNoteField"></div></div><div class="edit-section"><h2>استقبال الطلبات</h2><label class="switch-label"><input type="checkbox" id="registrationOpen" role="switch">فتح نموذج التسجيل للطلبات الجديدة</label></div></section>
+      </form>
+    </section>
+  </main>
+  <dialog class="preview-dialog" id="previewDialog"><div class="preview-toolbar"><strong>معاينة المسودة</strong><div class="preview-controls"><button class="icon-button active" id="desktopPreview" title="معاينة سطح المكتب" aria-label="معاينة سطح المكتب" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#monitor"></use></svg></button><button class="icon-button" id="mobilePreview" title="معاينة الجوال" aria-label="معاينة الجوال" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="icons.svg#smartphone"></use></svg></button><button class="icon-button" id="closePreview" title="إغلاق المعاينة" aria-label="إغلاق المعاينة"><svg class="icon" aria-hidden="true"><use href="icons.svg#x"></use></svg></button></div></div><div class="preview-stage"><iframe id="previewFrame" title="معاينة الموقع قبل النشر"></iframe></div></dialog>
+  <script src="app-settings.js" defer></script><script src="site-data.js" defer></script><script src="site-api.js" defer></script><script src="admin.js" defer></script>
+</body>
+</html>
